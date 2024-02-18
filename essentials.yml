@@ -33,7 +33,7 @@
     - name: Ensure Docker packages are installed
       when: ansible_distribution == "Debian"
       apt:
-        name: docker-ce, docker-ce-cli, containerd.io
+        name: docker-ce, docker-ce-cli, containerd.io, docker-compose-plugin
         state: latest
 
     - name: Ensure the Docker service is enabled and started
@@ -41,22 +41,6 @@
         name: docker
         state: started
         enabled: yes
-
-- name: Ensure Docker Compose (V1) is installed
-  hosts: all
-  become: yes
-  tasks:
-    - name: Ensure Python 3 is installed (Debian)
-      when: ansible_distribution == "Debian"
-      apt:
-        name: python3, python3-pip
-        state: latest
-        update_cache: yes
-
-    - name: Ensure docker-compose is installed through pip
-      pip:
-        name: docker-compose
-        state: latest
 
 - name: Ensure Beets is installed
   hosts: storage
