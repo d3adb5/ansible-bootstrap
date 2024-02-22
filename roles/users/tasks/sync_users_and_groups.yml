@@ -3,7 +3,7 @@
   ansible.builtin.group:
     name: "{{ item }}"
     state: present
-  loop: "{{ _groups | map(attribute='name') }}"
+  loop: "{{ users_groups | map(attribute='name') }}"
 
 - name: Ensure previously added groups are removed
   ansible.builtin.group:
@@ -11,17 +11,17 @@
     state: absent
   loop: >-
     {{
-      current_groups | difference(_groups | map(attribute='name'))
-                     | difference(users | map(attribute='name'))
+      current_groups | difference(users_groups | map(attribute='name'))
+                     | difference(users_users | map(attribute='name'))
     }}
-  when: remove_groups
+  when: users_remove_past_groups
 
 - name: Ensure all desired users are present
   ansible.builtin.user:
     name: "{{ item.name }}"
     groups: "{{ item.groups }}"
     state: present
-  loop: "{{ users }}"
+  loop: "{{ users_users }}"
   loop_control:
     label: "{{ item.name }}"
 
@@ -29,13 +29,13 @@
   ansible.builtin.user:
     name: "{{ item }}"
     state: absent
-  loop: "{{ current_users | difference(users | map(attribute='name')) }}"
-  when: remove_users
+  loop: "{{ current_users | difference(users_users | map(attribute='name')) }}"
+  when: users_remove_past_users
 
 - name: Add public SSH key for users that have one set
   ansible.posix.authorized_key:
     user: "{{ item.name }}"
     key: "{{ item.ssh_key }}"
-  loop: "{{ users | selectattr('ssh_key', 'defined') }}"
+  loop: "{{ users_users | selectattr('ssh_key', 'defined') }}"
   loop_control:
     label: "{{ item.name }}"

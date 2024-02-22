@@ -1,17 +1,17 @@
 ---
-users:
+users_users:
   - name: ansible
     groups:
       - sudo
 
 # Whether to remove previously added users and groups.
-remove_users: false
-remove_groups: false
+users_remove_past_users: false
+users_remove_past_groups: false
 
 # Curse you Ansible and the fact I can't override 'groups'.
-_groups: []
+users_groups: []
 
-tools:
+users_tools:
   - name: dotfiles
     repository: https://github.com/d3adb5/dotfiles
     links:

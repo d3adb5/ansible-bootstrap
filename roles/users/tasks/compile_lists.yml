@@ -28,7 +28,7 @@
 
 - name: Compile raw list of symlinks to create for tools
   ansible.builtin.set_fact:
-    _tool_symlinks: "{{ users | product(tools | subelements('links')) }}"
+    _tool_symlinks: "{{ users_users | product(users_tools | subelements('links')) }}"
 
 - name: Create nicer list of symlinks to create for tools
   ansible.builtin.set_fact:

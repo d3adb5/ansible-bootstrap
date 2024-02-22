@@ -17,7 +17,7 @@
     repo: "{{ item.repository }}"
     dest: "/opt/tools/{{ item.name }}"
     update: true
-  loop: "{{ tools }}"
+  loop: "{{ users_tools }}"
   loop_control:
     label: "{{ item.name }}"
 
