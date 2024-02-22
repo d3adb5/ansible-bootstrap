@@ -5,7 +5,7 @@
   vars:
     ssh_user: "{{ lookup('env', 'ANSIBLE_SSH_USER') }}"
     ssh_port: "{{ lookup('env', 'ANSIBLE_SSH_PORT') }}"
-    ssh_key:  "{{ lookup('env', 'ANSIBLE_SSH_KEY') }}"
+    ssh_key: "{{ lookup('env', 'ANSIBLE_SSH_KEY') }}"
     swp_path: "/.swp"
   tasks:
     - name: Ensure ansible user exists
