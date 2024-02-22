@@ -5,7 +5,7 @@
   tasks:
     - name: Update all packages (Debian)
       when: ansible_distribution == "Debian"
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
         upgrade: full
 
@@ -24,29 +24,29 @@
   tasks:
     - name: Ensure dependencies are installed (Debian)
       when: ansible_distribution == "Debian"
-      apt:
+      ansible.builtin.apt:
         name: ca-certificates, curl, gpg-agent, software-properties-common
         state: latest
         update_cache: yes
 
     - name: Ensure Docker PGP key is in APT keyring
       when: ansible_distribution == "Debian"
-      apt_key:
+      ansible.builtin.apt_key:
         url: https://download.docker.com/linux/debian/gpg
 
     - name: Ensure Docker repository is present for APT
       when: ansible_distribution == "Debian"
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: deb https://download.docker.com/linux/debian bullseye stable
 
     - name: Ensure Docker packages are installed
       when: ansible_distribution == "Debian"
-      apt:
+      ansible.builtin.apt:
         name: docker-ce, docker-ce-cli, containerd.io, docker-compose-plugin
         state: latest
 
     - name: Ensure the Docker service is enabled and started
-      service:
+      ansible.builtin.service:
         name: docker
         state: started
         enabled: yes
@@ -57,7 +57,7 @@
   tasks:
     - name: Ensure Beets is installed (Debian)
       when: ansible_distribution == "Debian"
-      apt:
+      ansible.builtin.apt:
         name: beets
         state: latest
         update_cache: yes
@@ -68,13 +68,13 @@
   tasks:
     - name: Ensure essential tools are installed (Debian)
       when: ansible_distribution == "Debian"
-      apt:
+      ansible.builtin.apt:
         name: zsh, mosh, tree, tmux, neovim, rsync, ncdu, htop, git, tmuxinator
         state: latest
         update_cache: yes
 
     - name: Ensure mosh's UDP ports are open (firewalld)
-      firewalld:
+      ansible.posix.firewalld:
         port: 60000-61000/udp
         permanent: true
         immediate: true

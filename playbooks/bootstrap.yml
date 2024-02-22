@@ -9,31 +9,31 @@
     swp_path: "/.swp"
   tasks:
     - name: Ensure ansible user exists
-      user:
+      ansible.builtin.user:
         name: "{{ ssh_user }}"
         home: "/var/lib/{{ ssh_user }}"
         system: yes
 
     - name: Ensure packages are up to date (Debian)
       when: ansible_distribution == "Debian"
-      apt:
+      ansible.builtin.apt:
         update_cache: yes
         upgrade: dist
 
     - name: Ensure sudo package is installed (Debian)
       when: ansible_distribution == "Debian"
-      apt:
+      ansible.builtin.apt:
         name: sudo
 
     - name: Ensure fail2ban is installed and enabled
       block:
         - name: Ensure fail2ban is installed (Debian)
           when: ansible_distribution == "Debian"
-          apt:
+          ansible.builtin.apt:
             name: fail2ban
 
         - name: Ensure fail2ban service is enabled & started
-          service:
+          ansible.builtin.service:
             name: fail2ban
             enabled: true
             state: started
@@ -42,80 +42,80 @@
       block:
         - name: Ensure firewalld is installed (Debian)
           when: ansible_distribution == "Debian"
-          apt:
+          ansible.builtin.apt:
             name: firewalld
             state: latest
 
         - name: Ensure configured SSH port is open through firewalld
-          firewalld:
+          ansible.posix.firewalld:
             port: '{{ ssh_port }}/tcp'
             permanent: true
             immediate: true
             state: enabled
 
         - name: Ensure firewalld service is enabled & started
-          service:
+          ansible.builtin.service:
             name: firewalld
             enabled: true
             state: started
 
     - name: Ensure ansible user can become root w/o passwd
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/sudoers
         line: "{{ ssh_user }} ALL=(ALL) NOPASSWD:ALL"
         validate: "visudo -cf %s"
 
     - name: Ensure sudo group can become root w/o passwd
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/sudoers
         regexp: '^%sudo'
         line: "%sudo ALL=(ALL) NOPASSWD:ALL"
         validate: "visudo -cf %s"
 
     - name: Ensure sudo preserves SSH_AUTH_SOCK
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/sudoers
         regexp: '^Defaults>root'
         line: "Defaults>root env_keep+=SSH_AUTH_SOCK"
         validate: "visudo -cf %s"
 
     - name: Ensure SSH pubkey is authorized for configured user
-      authorized_key:
+      ansible.posix.authorized_key:
         user: "{{ ssh_user }}"
         key: "{{ ssh_key }}"
 
     - name: Ensure basic SSH configuration is present
       block:
         - name: Ensure SSH daemon listens on configured port
-          lineinfile:
+          ansible.builtin.lineinfile:
             path: /etc/ssh/sshd_config
             regexp: ^Port
             line: "Port {{ ssh_port }}"
           notify: Restart SSH daemon
 
         - name: Ensure password authentication is disabled
-          lineinfile:
+          ansible.builtin.lineinfile:
             path: /etc/ssh/sshd_config
             regexp: ^(# *)?PasswordAuthentication
             line: PasswordAuthentication no
           notify: Restart SSH daemon
 
         - name: Ensure users with empty passwords can't log in
-          lineinfile:
+          ansible.builtin.lineinfile:
             path: /etc/ssh/sshd_config
             regexp: ^(# *)?PermitEmptyPasswords
             line: PermitEmptyPasswords no
           notify: Restart SSH daemon
 
         - name: Ensure root user cannot log in through SSH
-          lineinfile:
+          ansible.builtin.lineinfile:
             path: /etc/ssh/sshd_config
             regexp: ^(# *)?PermitRootLogin
             line: PermitRootLogin no
           notify: Restart SSH daemon
 
         - name: Ensure users can try to authenticate only twice
-          lineinfile:
+          ansible.builtin.lineinfile:
             path: /etc/ssh/sshd_config
             regexp: ^(# *)?MaxAuthTries
             line: MaxAuthTries 2
@@ -124,7 +124,7 @@
     - name: Ensure specified additional swap is present
       block:
         - name: Retrieve information about current swap file
-          stat:
+          ansible.builtin.stat:
             path: "{{ swp_path }}"
           register: swapfile
 
@@ -132,7 +132,7 @@
           when: >
             (swap_in_mb == 0 and swapfile.stat.exists) or (swapfile.stat.exists
               and swapfile.stat.size != (swap_in_mb * 1024 * 1024))
-          shell: |
+          ansible.builtin.shell: |
             swapoff {{ swp_path }}
             rm {{ swp_path }}
 
@@ -140,14 +140,14 @@
           when: >
             swap_in_mb > 0 and (not swapfile.stat.exists or
               swapfile.stat.size != (swap_in_mb * 1024 * 1024))
-          shell: |
+          ansible.builtin.shell: |
             fallocate -l {{ ((swap_in_mb) | int * 1024 * 1024) }} {{ swp_path }}
             mkswap {{ swp_path }}
             swapon {{ swp_path }}
 
         - name: Ensure swap is mounted through /etc/fstab
           when: swap_in_mb > 0
-          mount:
+          ansible.posix.mount:
             src: "/.swp"
             name: "none"
             fstype: "swap"
@@ -157,7 +157,7 @@
             state: "present"
 
     - name: Remove host from bootstrap group
-      shell: |
+      ansible.builtin.shell: |
         vars='{"ansible_user":"{{ ssh_user }}","ansible_port":{{ ssh_port }}}'
         addExpr=".all.hosts.{{ inventory_hostname }} += $vars"
         delExpr='del(.all.children.bootstrap.hosts.{{ inventory_hostname }})'
@@ -170,6 +170,6 @@
 
   handlers:
     - name: Restart SSH daemon
-      service:
+      ansible.builtin.service:
         name: sshd
         state: restarted
