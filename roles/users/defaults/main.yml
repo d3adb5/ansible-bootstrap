@@ -1,0 +1,28 @@
+---
+users:
+  - name: ansible
+    groups:
+      - sudo
+
+# Whether to remove previously added users and groups.
+remove_users: false
+remove_groups: false
+
+# Curse you Ansible and the fact I can't override 'groups'.
+_groups: []
+
+tools:
+  - name: dotfiles
+    repository: https://github.com/d3adb5/dotfiles
+    links:
+      - src: zsh/zshrc
+        dest: .zshrc
+      - src: zsh/conf.d
+        dest: .config/zsh
+      - src: tmux/tmux.conf
+        dest: .tmux.conf
+  - name: tpm
+    repository: https://github.com/tmux-plugins/tpm
+    links:
+      - src: .
+        dest: .tmux/plugins/tpm

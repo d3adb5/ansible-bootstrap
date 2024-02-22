@@ -1,0 +1,31 @@
+---
+- name: Ensure user tools dir under /opt exists
+  ansible.builtin.file:
+    path: /opt/tools
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Ensure git is installed
+  ansible.builtin.package:
+    name: git
+    state: present
+
+- name: Ensure tool repositories are cloned
+  ansible.builtin.git:
+    repo: "{{ item.repository }}"
+    dest: "/opt/tools/{{ item.name }}"
+    update: yes
+  loop: "{{ tools }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Set up symlinks for tools for each user
+  ansible.builtin.file:
+    src: "/opt/tools/{{ item.tool }}/{{ item.src }}"
+    dest: "/home/{{ item.user }}/{{ item.dest }}"
+    state: link
+  loop: "{{ tool_symlinks }}"
+  loop_control:
+    label: "~{{ item.user}}/{{ item.dest }}"

@@ -1,0 +1,4 @@
+---
+- import_tasks: compile_lists.yml
+- import_tasks: sync_users_and_groups.yml
+- import_tasks: setup_tooling.yml

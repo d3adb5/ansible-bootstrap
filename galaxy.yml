@@ -1,0 +1,21 @@
+namespace: d3adb5
+name: bootstrap
+version: 1.1.3
+
+description: set up everything I need on a server
+
+authors:
+- d3adb5 <me@d3adb5.net>
+
+tags: []
+build_ignore: []
+
+dependencies:
+  ansible.posix: "*"
+  community.general: "*"
+
+readme: README.md
+repository: https://github.com/d3adb5/playbooks
+documentation: https://github.com/d3adb5/playbooks
+homepage: https://github.com/d3adb5/playbooks
+issues: https://github.com/d3adb5/playbooks/issues
