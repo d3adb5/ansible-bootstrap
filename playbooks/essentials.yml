@@ -1,17 +1,17 @@
 ---
 - name: Ensure all packages are up to date
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Update all packages (Debian)
       when: ansible_distribution == "Debian"
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
         upgrade: full
 
 - name: Ensure en_US.UTF-8 locale is present
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Ensure en_US.UTF-8 locale is present
       community.general.locale_gen:
@@ -20,14 +20,14 @@
 
 - name: Ensure Docker Engine is installed
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Ensure dependencies are installed (Debian)
       when: ansible_distribution == "Debian"
       ansible.builtin.apt:
         name: ca-certificates, curl, gpg-agent, software-properties-common
         state: latest
-        update_cache: yes
+        update_cache: true
 
     - name: Ensure Docker PGP key is in APT keyring
       when: ansible_distribution == "Debian"
@@ -49,29 +49,29 @@
       ansible.builtin.service:
         name: docker
         state: started
-        enabled: yes
+        enabled: true
 
 - name: Ensure Beets is installed
   hosts: storage
-  become: yes
+  become: true
   tasks:
     - name: Ensure Beets is installed (Debian)
       when: ansible_distribution == "Debian"
       ansible.builtin.apt:
         name: beets
         state: latest
-        update_cache: yes
+        update_cache: true
 
 - name: Ensure essential tools are installed
   hosts: all
-  become: yes
+  become: true
   tasks:
     - name: Ensure essential tools are installed (Debian)
       when: ansible_distribution == "Debian"
       ansible.builtin.apt:
         name: zsh, mosh, tree, tmux, neovim, rsync, ncdu, htop, git, tmuxinator
         state: latest
-        update_cache: yes
+        update_cache: true
 
     - name: Ensure mosh's UDP ports are open (firewalld)
       ansible.posix.firewalld:

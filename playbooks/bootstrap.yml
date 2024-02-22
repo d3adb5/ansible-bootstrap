@@ -1,7 +1,7 @@
 ---
 - name: Set up servers for Ansible
   hosts: bootstrap
-  become: yes
+  become: true
   vars:
     ssh_user: "{{ lookup('env', 'ANSIBLE_SSH_USER') }}"
     ssh_port: "{{ lookup('env', 'ANSIBLE_SSH_PORT') }}"
@@ -12,12 +12,12 @@
       ansible.builtin.user:
         name: "{{ ssh_user }}"
         home: "/var/lib/{{ ssh_user }}"
-        system: yes
+        system: true
 
     - name: Ensure packages are up to date (Debian)
       when: ansible_distribution == "Debian"
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
         upgrade: dist
 
     - name: Ensure sudo package is installed (Debian)
@@ -165,7 +165,7 @@
         yq -y "$delExpr" {{ inventory_file }}.tmp > {{ inventory_file }}
         rm {{ inventory_file }}.tmp
       delegate_to: 127.0.0.1
-      become: no
+      become: false
       throttle: 1
 
   handlers:

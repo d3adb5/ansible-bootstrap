@@ -16,7 +16,7 @@
   ansible.builtin.git:
     repo: "{{ item.repository }}"
     dest: "/opt/tools/{{ item.name }}"
-    update: yes
+    update: true
   loop: "{{ tools }}"
   loop_control:
     label: "{{ item.name }}"
