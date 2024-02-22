@@ -28,4 +28,4 @@
     state: link
   loop: "{{ tool_symlinks }}"
   loop_control:
-    label: "~{{ item.user}}/{{ item.dest }}"
+    label: "~{{ item.user }}/{{ item.dest }}"
