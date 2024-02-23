@@ -1,0 +1,64 @@
+---
+- name: Ensure sudo preserves the SSH_AUTH_SOCK variable
+  ansible.builtin.lineinfile:
+    path: "{{ baseline_sudoers_file }}"
+    line: "Defaults>root env_keep+=SSH_AUTH_SOCK"
+    owner: root
+    group: root
+    mode: '0440'
+    create: true
+
+- name: Ensure SSH daemon listens on the configured port
+  ansible.builtin.lineinfile:
+    path: "{{ baseline_sshd_config_file }}"
+    line: "Port {{ baseline_ssh_port }}"
+    regexp: "^Port"
+    owner: root
+    group: root
+    mode: '0444'
+    create: true
+  notify: Restart SSH daemon
+
+- name: Ensure password authentication is disabled
+  ansible.builtin.lineinfile:
+    path: "{{ baseline_sshd_config_file }}"
+    line: "PasswordAuthentication no"
+    regexp: "^PasswordAuthentication"
+    owner: root
+    group: root
+    mode: '0444'
+    create: true
+  notify: Restart SSH daemon
+
+- name: Ensure users with empty passwords cannot log in
+  ansible.builtin.lineinfile:
+    path: "{{ baseline_sshd_config_file }}"
+    line: "PermitEmptyPasswords no"
+    regexp: "^PermitEmptyPasswords"
+    owner: root
+    group: root
+    mode: '0444'
+    create: true
+  notify: Restart SSH daemon
+
+- name: Ensure root user cannot log in through SSH
+  ansible.builtin.lineinfile:
+    path: "{{ baseline_sshd_config_file }}"
+    line: "PermitRootLogin no"
+    regexp: "^PermitRootLogin"
+    owner: root
+    group: root
+    mode: '0444'
+    create: true
+  notify: Restart SSH daemon
+
+- name: Ensure users can try to authenticate only twice
+  ansible.builtin.lineinfile:
+    path: "{{ baseline_sshd_config_file }}"
+    line: "MaxAuthTries 2"
+    regexp: "^MaxAuthTries"
+    owner: root
+    group: root
+    mode: '0444'
+    create: true
+  notify: Restart SSH daemon

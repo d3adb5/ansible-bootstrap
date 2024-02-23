@@ -1,4 +1,5 @@
-meta/runtime.yml                    meta-runtime[unsupported-version]
-playbooks/bootstrap.yml             package-latest
-playbooks/essentials.yml            package-latest
-roles/users/tasks/setup_tooling.yml latest[git]
+meta/runtime.yml                        meta-runtime[unsupported-version]
+playbooks/bootstrap.yml                 package-latest
+playbooks/essentials.yml                package-latest
+roles/baseline/tasks/network_access.yml package-latest
+roles/users/tasks/setup_tooling.yml     latest[git]

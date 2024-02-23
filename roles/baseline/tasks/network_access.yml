@@ -1,0 +1,29 @@
+---
+- name: Ensure fail2ban is installed
+  ansible.builtin.package:
+    name: fail2ban
+    state: latest
+
+- name: Ensure fail2ban is enabled and running
+  ansible.builtin.service:
+    name: fail2ban
+    enabled: true
+    state: started
+
+- name: Ensure firewalld is installed
+  ansible.builtin.package:
+    name: firewalld
+    state: latest
+
+- name: Ensure configured SSH port is open through firewalld
+  ansible.posix.firewalld:
+    port: '{{ baseline_ssh_port }}/tcp'
+    permanent: true
+    immediate: true
+    state: enabled
+
+- name: Ensure firewalld service is enabled and running
+  ansible.builtin.service:
+    name: firewalld
+    enabled: true
+    state: started
