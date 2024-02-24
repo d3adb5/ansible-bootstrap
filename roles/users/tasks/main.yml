@@ -1,0 +1,14 @@
+---
+- name: Ensure sudo package is installed
+  ansible.builtin.package:
+    name: sudo
+    state: present
+
+- name: Compile utility lists
+  ansible.builtin.import_tasks: compile_lists.yml
+
+- name: Sync users and groups
+  ansible.builtin.import_tasks: sync_users_and_groups.yml
+
+- name: Setup tools
+  ansible.builtin.import_tasks: setup_tooling.yml

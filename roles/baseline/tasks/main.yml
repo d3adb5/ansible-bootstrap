@@ -1,0 +1,9 @@
+---
+- name: Essential packages and system settings
+  ansible.builtin.import_tasks: essential.yml
+
+- name: SSH baseline configuration
+  ansible.builtin.import_tasks: ssh.yml
+
+- name: Fail2ban and firewall setup
+  ansible.builtin.import_tasks: network_access.yml

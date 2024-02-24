@@ -1,0 +1,23 @@
+namespace: d3adb5
+name: bootstrap
+version: 1.1.3
+
+description: set up everything I need on a server
+license:
+  - BSD-3-Clause
+
+authors:
+  - d3adb5 <me@d3adb5.net>
+
+tags: [linux]
+build_ignore: []
+
+dependencies:
+  ansible.posix: "*"
+  community.general: "*"
+
+readme: README.md
+repository: https://github.com/d3adb5/ansible-bootstrap
+documentation: https://github.com/d3adb5/ansible-bootstrap
+homepage: https://github.com/d3adb5/ansible-bootstrap
+issues: https://github.com/d3adb5/ansible-bootstrap/issues

@@ -1,0 +1,37 @@
+---
+- name: Ensure awk is installed
+  ansible.builtin.package:
+    name: gawk
+    state: present
+
+- name: Determine users with a login shell in the host
+  ansible.builtin.shell: |-
+    set -eo pipefail
+    getent passwd | grep -v nologin | awk -F: '{ if ($3>=1000) print $1 }'
+  register: users_with_login_shell
+  changed_when: false
+
+- name: Compile list of users from the last task
+  ansible.builtin.set_fact:
+    current_users: "{{ users_with_login_shell.stdout_lines }}"
+
+- name: Determine groups in the host
+  ansible.builtin.shell: |-
+    set -eo pipefail
+    getent group | grep -v nogroup | awk -F: '{ if ($3>=1000) print $1 }'
+  register: non_system_groups
+  changed_when: false
+
+- name: Compile list of groups from the last task
+  ansible.builtin.set_fact:
+    current_groups: "{{ non_system_groups.stdout_lines }}"
+
+- name: Compile raw list of symlinks to create for tools
+  ansible.builtin.set_fact:
+    _tool_symlinks: "{{ users_users | product(users_tools | subelements('links')) }}"
+
+- name: Create nicer list of symlinks to create for tools
+  ansible.builtin.set_fact:
+    tool_symlinks: "{{ _tool_symlinks | map('flatten') | json_query(query) }}"
+  vars:
+    query: "[*].{user: [0].name, tool: [1].name, src: [2].src, dest: [2].dest}"
