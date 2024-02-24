@@ -1,0 +1,32 @@
+---
+- name: Ensure Docker dependencies are installed
+  ansible.builtin.package:
+    name:
+      - ca-certificates
+      - curl
+      - gpg-agent
+      - software-properties-common
+    state: latest
+
+- name: Ensure Docker PGP key is in APT keyring
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+
+- name: Ensure Docker repository is present for APT
+  ansible.builtin.apt_repository:
+    repo: deb https://download.docker.com/linux/debian bookworm stable
+
+- name: Ensure Docker packages are installed
+  ansible.builtin.package:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: latest
+
+- name: Ensure the Docker service is enabled and started
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true

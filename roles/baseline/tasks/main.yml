@@ -1,4 +1,7 @@
 ---
+- name: Essential packages and system settings
+  ansible.builtin.import_tasks: essential.yml
+
 - name: SSH baseline configuration
   ansible.builtin.import_tasks: ssh.yml
 

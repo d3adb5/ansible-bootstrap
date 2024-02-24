@@ -1,0 +1,27 @@
+---
+- name: Ensure en_US.UTF-8 locale is present
+  community.general.locale_gen:
+    name: en_US.UTF-8
+    state: present
+
+- name: Ensure essential tools are installed
+  ansible.builtin.package:
+    name:
+      - zsh
+      - mosh
+      - tree
+      - tmux
+      - neovim
+      - rsync
+      - ncdu
+      - htop
+      - git
+      - tmuxinator
+    state: latest
+
+- name: Ensure mosh's UDP port range is open (firewalld)
+  ansible.posix.firewalld:
+    port: 60000-61000/udp
+    permanent: true
+    immediate: true
+    state: enabled
