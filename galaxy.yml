@@ -17,7 +17,7 @@ dependencies:
   community.general: "*"
 
 readme: README.md
-repository: https://github.com/d3adb5/playbooks
-documentation: https://github.com/d3adb5/playbooks
-homepage: https://github.com/d3adb5/playbooks
-issues: https://github.com/d3adb5/playbooks/issues
+repository: https://github.com/d3adb5/ansible-bootstrap
+documentation: https://github.com/d3adb5/ansible-bootstrap
+homepage: https://github.com/d3adb5/ansible-bootstrap
+issues: https://github.com/d3adb5/ansible-bootstrap/issues
