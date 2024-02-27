@@ -1,4 +1,13 @@
 ---
+- name: Ensure sudo group can sudo without password
+  ansible.builtin.lineinfile:
+    path: "{{ baseline_sudoers_file }}"
+    line: "%sudo ALL=(ALL) NOPASSWD: ALL"
+    owner: root
+    group: root
+    mode: '0440'
+    create: true
+
 - name: Ensure sudo preserves the SSH_AUTH_SOCK variable
   ansible.builtin.lineinfile:
     path: "{{ baseline_sudoers_file }}"
