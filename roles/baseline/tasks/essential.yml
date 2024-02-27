@@ -4,6 +4,10 @@
     name: en_US.UTF-8
     state: present
 
+- name: Ensure machine hostname is set
+  ansible.builtin.hostname:
+    name: "{{ baseline_hostname }}"
+
 - name: Ensure essential tools are installed
   ansible.builtin.package:
     name:

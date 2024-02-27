@@ -2,3 +2,5 @@
 baseline_ssh_port: 22
 baseline_sudoers_file: /etc/sudoers.d/baseline
 baseline_sshd_config_file: /etc/ssh/sshd_config.d/baseline.conf
+
+baseline_hostname: "{{ inventory_hostname }}"
