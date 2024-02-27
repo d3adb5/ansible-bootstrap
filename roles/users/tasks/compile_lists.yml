@@ -8,6 +8,8 @@
   ansible.builtin.shell: |-
     set -eo pipefail
     getent passwd | grep -v nologin | awk -F: '{ if ($3>=1000) print $1 }'
+  args:
+    executable: /bin/bash
   register: users_with_login_shell
   changed_when: false
 
@@ -19,6 +21,8 @@
   ansible.builtin.shell: |-
     set -eo pipefail
     getent group | grep -v nogroup | awk -F: '{ if ($3>=1000) print $1 }'
+  args:
+    executable: /bin/bash
   register: non_system_groups
   changed_when: false
 
