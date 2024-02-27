@@ -20,6 +20,7 @@
   ansible.builtin.user:
     name: "{{ item.name }}"
     groups: "{{ item.groups }}"
+    shell: "{{ item.shell | default('/bin/bash') }}"
     state: present
   loop: "{{ users_users }}"
   loop_control:
