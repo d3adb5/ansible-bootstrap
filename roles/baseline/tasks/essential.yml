@@ -22,10 +22,3 @@
       - git
       - tmuxinator
     state: latest
-
-- name: Ensure mosh's UDP port range is open (firewalld)
-  ansible.posix.firewalld:
-    port: 60000-61000/udp
-    permanent: true
-    immediate: true
-    state: enabled
