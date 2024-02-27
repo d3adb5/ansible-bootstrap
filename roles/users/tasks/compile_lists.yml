@@ -8,6 +8,8 @@
   ansible.builtin.shell: |-
     set -eo pipefail
     getent passwd | grep -v nologin | awk -F: '{ if ($3>=1000) print $1 }'
+  args:
+    executable: /bin/bash
   register: users_with_login_shell
   changed_when: false
 
@@ -19,6 +21,8 @@
   ansible.builtin.shell: |-
     set -eo pipefail
     getent group | grep -v nogroup | awk -F: '{ if ($3>=1000) print $1 }'
+  args:
+    executable: /bin/bash
   register: non_system_groups
   changed_when: false
 
@@ -35,3 +39,13 @@
     tool_symlinks: "{{ _tool_symlinks | map('flatten') | json_query(query) }}"
   vars:
     query: "[*].{user: [0].name, tool: [1].name, src: [2].src, dest: [2].dest}"
+
+- name: Compile raw list of home directories to create for tools
+  ansible.builtin.set_fact:
+    _tool_home_dirs: "{{ users_users | product(users_tools | subelements('home_directories')) }}"
+
+- name: Create nicer list of home directories to create for tools
+  ansible.builtin.set_fact:
+    tool_home_dirs: "{{ _tool_home_dirs | map('flatten') | json_query(query) }}"
+  vars:
+    query: "[*].{user: [0].name, tool: [1].name, directory: [2]}"

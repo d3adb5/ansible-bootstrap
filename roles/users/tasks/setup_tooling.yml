@@ -21,6 +21,17 @@
   loop_control:
     label: "{{ item.name }}"
 
+- name: Ensure necessary tool directories are created
+  ansible.builtin.file:
+    path: "/home/{{ item.user }}/{{ item.directory }}"
+    owner: "{{ item.user }}"
+    group: "{{ item.user }}"
+    mode: '0700'
+    state: directory
+  loop: "{{ tool_home_dirs }}"
+  loop_control:
+    label: "~{{ item.user }}/{{ item.directory }}"
+
 - name: Set up symlinks for tools for each user
   ansible.builtin.file:
     src: "/opt/tools/{{ item.tool }}/{{ item.src }}"

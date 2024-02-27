@@ -14,6 +14,8 @@ users_groups: []
 users_tools:
   - name: dotfiles
     repository: https://github.com/d3adb5/dotfiles
+    home_directories:
+      - .config
     links:
       - src: zsh/zshrc
         dest: .zshrc
@@ -23,6 +25,8 @@ users_tools:
         dest: .tmux.conf
   - name: tpm
     repository: https://github.com/tmux-plugins/tpm
+    home_directories:
+      - .tmux/plugins
     links:
       - src: .
         dest: .tmux/plugins/tpm

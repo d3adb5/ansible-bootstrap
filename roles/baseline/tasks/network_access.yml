@@ -3,17 +3,20 @@
   ansible.builtin.package:
     name: fail2ban
     state: latest
+  when: baseline_fail2ban_enabled
 
 - name: Ensure fail2ban is enabled and running
   ansible.builtin.service:
     name: fail2ban
     enabled: true
     state: started
+  when: baseline_fail2ban_enabled
 
 - name: Ensure firewalld is installed
   ansible.builtin.package:
     name: firewalld
     state: latest
+  when: baseline_firewalld_enabled
 
 - name: Ensure configured SSH port is open through firewalld
   ansible.posix.firewalld:
@@ -21,9 +24,19 @@
     permanent: true
     immediate: true
     state: enabled
+  when: baseline_firewalld_enabled
 
 - name: Ensure firewalld service is enabled and running
   ansible.builtin.service:
     name: firewalld
     enabled: true
     state: started
+  when: baseline_firewalld_enabled
+
+- name: Ensure mosh's UDP port range is open (firewalld)
+  ansible.posix.firewalld:
+    port: 60000-61000/udp
+    permanent: true
+    immediate: true
+    state: enabled
+  when: baseline_firewalld_enabled
