@@ -4,3 +4,6 @@ baseline_sudoers_file: /etc/sudoers.d/baseline
 baseline_sshd_config_file: /etc/ssh/sshd_config.d/baseline.conf
 
 baseline_hostname: "{{ inventory_hostname }}"
+
+baseline_fail2ban_enabled: true
+baseline_firewalld_enabled: true
