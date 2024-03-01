@@ -4,4 +4,5 @@ playbooks/essentials.yml                package-latest
 roles/baseline/tasks/network_access.yml package-latest
 roles/baseline/tasks/essential.yml      package-latest
 roles/baseline/tasks/docker.yml         package-latest
+roles/nfs_server/tasks/main.yml         package-latest
 roles/users/tasks/setup_tooling.yml     latest[git]

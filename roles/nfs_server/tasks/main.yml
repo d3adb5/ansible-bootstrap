@@ -1,0 +1,41 @@
+---
+- name: Ensure NFS server is installed
+  ansible.builtin.package:
+    name: nfs-kernel-server
+    state: latest
+
+- name: Ensure NFS server share root exists
+  ansible.builtin.file:
+    path: "{{ nfs_server_share_root }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Ensure export directories are created
+  ansible.builtin.file:
+    path: "{{ nfs_server_share_root }}/{{ item.relpath }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop: "{{ nfs_server_exports }}"
+  loop_control:
+    label: "{{ item.relpath }}"
+
+- name: Ensure desired exports are in place
+  ansible.builtin.lineinfile:
+    path: /etc/exports
+    line: >-
+      {{ nfs_server_share_root }}/{{ item.relpath }} {% for c in item.clients %} {{ c }}(rw,sync,no_subtree_check) {% endfor %}
+    state: present
+  loop: "{{ nfs_server_exports }}"
+  loop_control:
+    label: "{{ item.relpath }}"
+  notify: Restart NFS server
+
+- name: Ensure NFS server is enabled and running
+  ansible.builtin.service:
+    name: nfs-server
+    enabled: true
+    state: started

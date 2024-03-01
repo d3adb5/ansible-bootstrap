@@ -1,0 +1,18 @@
+galaxy_info:
+  author: d3adb5
+  description: setup an nfs server
+
+  min_ansible_version: "2.16.0"
+
+  license: BSD-3-Clause
+
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+
+  galaxy_tags:
+    - storage
+    - applications
+
+dependencies: []
