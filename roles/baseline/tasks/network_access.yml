@@ -40,3 +40,21 @@
     immediate: true
     state: enabled
   when: baseline_firewalld_enabled
+
+- name: Ensure desired ports are open (firewalld)
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: "{{ baseline_firewall_open_ports }}"
+  when: baseline_firewalld_enabled
+
+- name: Ensure desired sources are whitelisted (firewalld)
+  ansible.posix.firewalld:
+    source: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: "{{ baseline_firewall_sources_whitelist }}"
+  when: baseline_firewalld_enabled

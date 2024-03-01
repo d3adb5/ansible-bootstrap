@@ -7,3 +7,10 @@ baseline_hostname: "{{ inventory_hostname }}"
 
 baseline_fail2ban_enabled: true
 baseline_firewalld_enabled: true
+
+baseline_firewall_open_ports:
+  - 80/tcp
+  - 443/tcp
+
+baseline_firewall_sources_whitelist:
+  - 127.0.0.1
