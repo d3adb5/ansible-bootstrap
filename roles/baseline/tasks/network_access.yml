@@ -55,6 +55,7 @@
     source: "{{ item }}"
     permanent: true
     immediate: true
+    zone: trusted
     state: enabled
   loop: "{{ baseline_firewall_sources_whitelist }}"
   when: baseline_firewalld_enabled
