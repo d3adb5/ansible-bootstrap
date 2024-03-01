@@ -18,19 +18,19 @@
     state: latest
   when: baseline_firewalld_enabled
 
+- name: Ensure firewalld service is enabled and running
+  ansible.builtin.service:
+    name: firewalld
+    enabled: true
+    state: started
+  when: baseline_firewalld_enabled
+
 - name: Ensure configured SSH port is open through firewalld
   ansible.posix.firewalld:
     port: '{{ baseline_ssh_port }}/tcp'
     permanent: true
     immediate: true
     state: enabled
-  when: baseline_firewalld_enabled
-
-- name: Ensure firewalld service is enabled and running
-  ansible.builtin.service:
-    name: firewalld
-    enabled: true
-    state: started
   when: baseline_firewalld_enabled
 
 - name: Ensure mosh's UDP port range is open (firewalld)
